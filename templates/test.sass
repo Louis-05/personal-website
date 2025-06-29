@@ -1,0 +1,118 @@
+// Variables
+$dark-grey: #1a1a1a
+$article-bg: #2b2b2b
+$white: #ffffff
+$accent-color: #007bff
+$font-family: 'Proxima Nova', sans-serif
+$separator-color: rgba(255, 255, 255, 0.15)
+
+// General styles
+body
+  background-color: $dark-grey
+  color: $white
+  font-family: $font-family
+  margin: 0
+  padding: 0
+  line-height: 1.6
+
+.container
+  max-width: 800px
+  margin: 0 auto
+  padding: 20px
+
+// Header styles
+.header
+  padding-bottom: 20px
+  border-bottom: 1px solid $separator-color
+
+  h1
+    margin: 0
+    font-size: 3.5em
+    font-weight: bold
+
+.navigation
+  margin-top: 20px
+  display: flex
+  justify-content: space-between
+  align-items: center
+  flex-wrap: wrap
+
+  .nav-buttons
+    display: flex
+    flex-wrap: wrap
+    gap: 15px
+
+    a
+      color: $white
+      text-decoration: none
+      padding: 10px 5px
+      border: none
+      border-bottom: 2px solid transparent
+      transition: border-color 0.3s
+
+      &:hover
+        border-bottom-color: $accent-color
+        color: $white
+
+  .search-bar
+    display: flex
+    min-width: 250px
+
+    input
+      width: 100%
+      padding: 10px
+      border: none
+      border-bottom: 1px solid $separator-color
+      background-color: transparent
+      color: $white
+
+      &:focus
+        outline: none
+        border-bottom-color: $accent-color
+
+    button
+      padding: 10px 15px
+      border: none
+      border-bottom: 1px solid $separator-color
+      background-color: transparent
+      color: $white
+      cursor: pointer
+
+      &:hover
+        background-color: $accent-color
+
+// Main content styles
+.main-content
+  margin-top: 20px
+  background-color: $article-bg
+  padding: 20px
+
+  .article
+    // Adds a styled separator between articles
+    + .article::before
+      content: ''
+      display: block
+      height: 1px
+      background-color: $separator-color
+      margin: 25px 0
+
+    h2
+      margin-top: 0
+
+    p
+      margin-bottom: 0
+
+// Footer styles
+.footer
+  text-align: center
+  padding: 20px
+  margin-top: 20px
+  border-top: 1px solid $separator-color
+
+  a
+    color: $white
+    text-decoration: none
+    margin: 0 10px
+
+    &:hover
+      text-decoration: underline

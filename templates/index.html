@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Louis's Blog</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Proxima+Nova&display=swap">
+    <style>
+        /* SASS-like variables */
+        :root {
+            --dark-grey: #1a1a1a;
+            --article-bg: #2b2b2b;
+            --white: #ffffff;
+            --accent-color: #007bff;
+            --font-family: 'Proxima Nova', sans-serif;
+            --separator-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* General styles */
+        body {
+            background-color: var(--dark-grey);
+            color: var(--white);
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header styles */
+        .header {
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--separator-color);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            font-weight: bold;
+        }
+
+        .navigation {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-buttons a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 10px 5px;
+            border: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .nav-buttons a:hover {
+            border-bottom-color: var(--accent-color);
+            color: var(--white);
+        }
+        
+        .search-bar {
+            display: flex;
+            min-width: 250px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 1px solid var(--separator-color);
+            background-color: transparent;
+            color: var(--white);
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-bottom-color: var(--accent-color);
+        }
+
+        .search-bar button {
+            padding: 10px 15px;
+            border: none;
+            border-bottom: 1px solid var(--separator-color);
+            background-color: transparent;
+            color: var(--white);
+            cursor: pointer;
+        }
+        
+        .search-bar button:hover {
+             background-color: var(--accent-color);
+        }
+
+        /* Main content styles */
+        .main-content {
+            margin-top: 20px;
+            background-color: var(--article-bg); /* Background moved to parent */
+            padding: 20px; /* Padding moved to parent */
+        }
+
+        .article {
+           /* Background and padding removed from individual articles */
+        }
+        
+        /* Adds a styled separator between articles */
+        .article + .article::before {
+            content: '';
+            display: block;
+            height: 1px;
+            background-color: var(--separator-color);
+            margin: 25px 0; /* Creates 25px margin top and bottom of separator */
+        }
+
+        .article h2 {
+            margin-top: 0;
+        }
+
+        .article p {
+            margin-bottom: 0;
+        }
+
+        /* Footer styles */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-top: 1px solid var(--separator-color);
+        }
+
+        .footer a {
+            color: var(--white);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <h1>Louis's Blog</h1>
+            <nav class="navigation">
+                <div class="nav-buttons">
+                    <a href="#">Home</a>
+                    <a href="#">Coding</a>
+                    <a href="#">Flashlight</a>
+                    <a href="#">Caving</a>
+                    <a href="#">About Me</a>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                    <button type="submit">Search</button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <article class="article">
+                <h2>Article Title 1</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </article>
+
+            <article class="article">
+                <h2>Article Title 2</h2>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </article>
+
+            <article class="article">
+                <h2>Article Title 3</h2>
+                <p>Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.</p>
+            </article>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <a href="#">About Me</a>
+            <a href="#">Privacy Notice</a>
+        </footer>
+
+    </div>
+
+</body>
+</html>
