@@ -1,12 +1,13 @@
 use std::collections::HashMap;
 
-use accept_language::{intersection, parse};
 use axum::{
     extract::{Path, Query},
     http::HeaderMap,
     response::IntoResponse,
 };
 use tracing::info;
+
+use crate::lang::Lang;
 
 pub async fn get_article(
     headers: HeaderMap,
@@ -15,11 +16,9 @@ pub async fn get_article(
 ) -> impl IntoResponse {
     info!("{:?}", headers);
 
-    let lang: &axum::http::HeaderValue = headers.get("accept-language").unwrap();
+    let headerlang: &axum::http::HeaderValue = headers.get("accept-language").unwrap();
 
-    let langs = accept_language::parse(lang.to_str().unwrap());
+    let lang = Lang::get_pref_lang(&headers, &params);
 
-    info!("lang : {:?}", langs);
+    info!("lang : {:?}", lang);
 }
-
-

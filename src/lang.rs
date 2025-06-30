@@ -22,44 +22,41 @@ impl Lang {
         }
     }
 
+    pub fn get_query_pref_lang(params: &HashMap<String, String>) -> Option<Lang> {
+        if let Some(lang) = params.get("lang") {
+            return Lang::from_min_string(lang);
+        }
 
-pub fn get_query_pref_lang(params: &HashMap<String,String>) -> Option<Lang> {
-    if let Some(lang) = params.get("lang") {
-        return Lang::from_min_string(lang);
-    } 
-
-    return None;
-}
-
-pub fn get_header_pref_lang(headers: &HeaderMap) -> Option<Lang> {
-    let Some(header_langs) = headers.get("accept-language") else {
         return None;
-    };
+    }
 
-    let Some(langs_string) = header_langs.to_str().ok() else {
-        return None;
-    };
+    pub fn get_header_pref_lang(headers: &HeaderMap) -> Option<Lang> {
+        let Some(header_langs) = headers.get("accept-language") else {
+            return None;
+        };
 
-    let langs_strings = accept_language::parse(langs_string);
+        let Some(langs_string) = header_langs.to_str().ok() else {
+            return None;
+        };
 
-    let langs: Vec<Lang> = langs_strings
-        .iter()
-        .filter_map(|s| Lang::from_min_string(s))
-        .collect();
+        let langs_strings = accept_language::parse(langs_string);
 
-    return langs.first().copied();
+        let langs: Vec<Lang> = langs_strings
+            .iter()
+            .filter_map(|s| Lang::from_min_string(s))
+            .collect();
+
+        return langs.first().copied();
+    }
+
+    pub fn get_pref_lang(headers: &HeaderMap, params: &HashMap<String, String>) -> Option<Lang> {
+        if let Some(lang) = Self::get_query_pref_lang(params) {
+            return Some(lang);
+        }
+
+        return Self::get_header_pref_lang(headers);
+    }
 }
-
-pub fn get_pref_lang(headers: &HeaderMap,params: &HashMap<String,String>) -> Option<Lang> {
-    if let Some(lang) = Self::get_query_pref_lang(params) {
-        return Some(lang)
-    } 
-   
-    return Self::get_header_pref_lang(headers)
-}
-
-}
-
 
 #[cfg(test)]
 mod tests {
@@ -69,8 +66,8 @@ mod tests {
 
     #[test]
     fn test_lang() {
-       assert_eq!(Lang::from_min_string("fr-FR"),Some(Lang::French));
-       assert_eq!(Lang::from_min_string("en"),Some(Lang::English));
+        assert_eq!(Lang::from_min_string("fr-FR"), Some(Lang::French));
+        assert_eq!(Lang::from_min_string("en"), Some(Lang::English));
     }
 
     #[test]
@@ -84,11 +81,20 @@ mod tests {
     #[test]
     fn test_header() {
         let mut headers = HeaderMap::new();
-        headers.insert("accept-language", HeaderValue::from_str("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3").unwrap());
-        assert_eq!(Lang::get_header_pref_lang(&headers),  Some(Lang::French));
-        headers.insert("accept-language", HeaderValue::from_str("en-US,en;q=0.9").unwrap());
-        assert_eq!(Lang::get_header_pref_lang(&headers),  Some(Lang::English));
-        headers.insert("accept-language", HeaderValue::from_str("de,es-ES;q=0.9").unwrap());
+        headers.insert(
+            "accept-language",
+            HeaderValue::from_str("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3").unwrap(),
+        );
+        assert_eq!(Lang::get_header_pref_lang(&headers), Some(Lang::French));
+        headers.insert(
+            "accept-language",
+            HeaderValue::from_str("en-US,en;q=0.9").unwrap(),
+        );
+        assert_eq!(Lang::get_header_pref_lang(&headers), Some(Lang::English));
+        headers.insert(
+            "accept-language",
+            HeaderValue::from_str("de,es-ES;q=0.9").unwrap(),
+        );
         assert_eq!(Lang::get_header_pref_lang(&headers), None);
     }
 }

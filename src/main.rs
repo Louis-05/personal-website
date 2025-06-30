@@ -4,7 +4,6 @@ mod error;
 mod get_article;
 mod lang;
 mod state;
-mod loader;
 use axum::{Router, routing::get};
 
 use crate::get_article::get_article;
