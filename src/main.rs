@@ -1,14 +1,16 @@
 mod article;
 mod consts;
 mod error;
-mod get_article;
+mod pages;
 mod lang;
 mod state;
 use axum::{Router, routing::get};
 
-use crate::get_article::get_article;
+
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+use crate::pages::{article::get_article, style::get_style};
 
 #[tokio::main]
 async fn main() {
@@ -28,6 +30,7 @@ async fn main() {
         .init();
 
     let app = Router::new()
+        .route("/style.css",get(get_style))
         .route("/about-me", get(|| async { "Hello, World!" }))
         .route("/article/{article-id}", get(get_article))
         .fallback(get(|| async { "Hello, World!" }));
