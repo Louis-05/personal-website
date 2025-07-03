@@ -1,11 +1,10 @@
 mod article;
 mod consts;
 mod error;
-mod pages;
 mod lang;
+mod pages;
 mod state;
 use axum::{Router, routing::get};
-
 
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -30,7 +29,7 @@ async fn main() {
         .init();
 
     let app = Router::new()
-        .route("/style.css",get(get_style))
+        .route("/style.css", get(get_style))
         .route("/about-me", get(|| async { "Hello, World!" }))
         .route("/article/{article-id}", get(get_article))
         .fallback(get(|| async { "Hello, World!" }));

@@ -1,5 +1,6 @@
 use crate::lang::Lang;
 use anyhow::Result;
+use pulldown_cmark::{Event, HeadingLevel, Parser, Tag};
 use serde::Deserialize;
 use std::{collections::HashMap, path::Path};
 
@@ -52,32 +53,19 @@ impl Article {
             tokio::fs::read_to_string(article_content_fr_path).await?,
         );
 
-        let article = Self::convert_file(article_file, contents_files);
+        let article = Self::convert_files_to_article(article_file, contents_files);
 
         Ok(article)
     }
 
-    fn convert_file(article_file: ArticleFile, contents_files: HashMap<Lang, String>) -> Article {
+    fn convert_files_to_article(
+        article_file: ArticleFile,
+        contents_files: HashMap<Lang, String>,
+    ) -> Article {
         let mut contents: HashMap<Lang, ArticleContent> = HashMap::new();
 
-        let mut options = pulldown_cmark::Options::empty();
-        options.insert(pulldown_cmark::Options::ENABLE_TABLES);
-
         for (lang, md_content) in contents_files {
-            let parser = pulldown_cmark::Parser::new_ext(&md_content, options);
-
-            //TODO add support for medias
-
-            let mut html_buf = String::new();
-            pulldown_cmark::html::push_html(&mut html_buf, parser);
-
-            //TODO add title find
-            let article_content = ArticleContent {
-                title: "TODO".to_string(),
-                short_content: "TODO".to_string(),
-                content: html_buf,
-            };
-
+            let article_content = Self::convert_file_to_content(&md_content);
             contents.insert(lang, article_content);
         }
 
@@ -91,4 +79,70 @@ impl Article {
 
         return article;
     }
+
+    fn convert_file_to_content(contents_files: &str) -> ArticleContent {
+        let mut options = pulldown_cmark::Options::empty();
+        options.insert(pulldown_cmark::Options::ENABLE_TABLES);
+
+        let parser = Parser::new_ext(&contents_files, options);
+
+        let mut current: Option<MyEvent> = None;
+        let mut title = String::new();
+
+        let iter = parser.map(|e| match e {
+            Event::Start(tag) => {
+                match &tag {
+                    Tag::Heading {
+                        level,
+                        id,
+                        classes,
+                        attrs,
+                    } => {
+                        if *level == HeadingLevel::H1 {
+                            current = Some(MyEvent::Title);
+                        }
+                    }
+                    _ => (),
+                }
+                Event::Start(tag)
+            }
+            Event::End(tag_end) => {
+                match &tag_end {
+                    pulldown_cmark::TagEnd::Heading(heading_level) => {
+                        if *heading_level == HeadingLevel::H1 {
+                            current = None;
+                        }
+                    }
+                    _ => (),
+                }
+                Event::End(tag_end)
+            }
+            Event::Text(cow_str) => {
+                match current {
+                    Some(MyEvent::Title) => title.push_str(&cow_str),
+                    _ => (),
+                }
+                Event::Text(cow_str)
+            }
+            e => e,
+        });
+
+        //TODO add support for medias
+
+        let mut html_buf = String::new();
+        pulldown_cmark::html::push_html(&mut html_buf, iter);
+
+        //TODO add title find
+        let article_content = ArticleContent {
+            title: "TODO".to_string(),
+            short_content: "TODO".to_string(),
+            content: html_buf,
+        };
+
+        article_content
+    }
+}
+pub enum MyEvent {
+    Title,
+    Other,
 }
